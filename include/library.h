@@ -21,9 +21,10 @@ private:
     // vector<User> users;
     //BST<Book> books;
     // BST<User> users;
-    unordered_map<string, Admin> admins;
-    unordered_map<int, Book> bookbyId;
-    unordered_map<int, User> userbyId;
+    unordered_map<string, Admin> admins;//to store addmin's data
+    unordered_map<int, Book> bookbyId;//to store book data for searching book by id
+    unordered_map<int, User> userbyId;//to store user data for searching user by id
+    unordered_map<int, int> bookIssuedByUser;//to store user and book id when user issued book 
 
     map<string, Book> bookbyTitle;
     map<string, User> userbyTitle;

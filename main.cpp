@@ -100,7 +100,7 @@ int main()
                         cin >> id;
                         cin.ignore();
                         getline(cin, name);
-                        getline(cin, name);
+                        getline(cin, password);
                         library.addAdmin(Admin(id, name,password));
                         cout<<"admin added sucssesfully.\n";
                         break;

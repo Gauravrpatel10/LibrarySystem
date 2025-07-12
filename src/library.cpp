@@ -17,12 +17,12 @@ void Library::addBook(const Book &book) {
 }
 
 void Library::displayAllBooks() const {
-    cout<<left
+    cout<<left//this is for top line when we display all book
         <<setw(5)<<"Id"
         <<setw(40)<<"Title"
         <<setw(30)<<"Author"
         <<"Issued"<<endl;
-    cout<<string(100,'=')<<endl;
+    cout<<string(100,'=')<<endl;// new line made by (====)
 
     for (const auto &pair : bookbyTitle) {
         pair.second.display();
@@ -48,8 +48,23 @@ void Library::issueBook(int bookId) {
         if (it->second.isIssued())
             cout << "Book is already issued.\n";
         else {
+            int userId;
+            string userName;
+            cout<<"Enter your Id :";
+            cin>>userId;
+            cin.ignore();
+            cout<<"Enter your Name :";
+            getline(cin,userName);
+
+            if(userbyId.find(userId) == userbyId.end())//if user is new so creat new user
+            {
+                addUser(User(userId,userName));
+            }
+
             it->second.issueBook();
             bookbyTitle[it->second.getTitle()] = it->second;
+            bookIssuedByUser[bookId] = userId;
+            cout << "Book issued successfully.\n";
         }
     } else {
         cout << "Book not found.\n";
@@ -60,8 +75,30 @@ void Library::returnBook(int bookId) {
     auto it = bookbyId.find(bookId);
     if (it != bookbyId.end()) {
         if (it->second.isIssued()) {
+
+            int userId = bookIssuedByUser[bookId];
             it->second.returnBook();
             bookbyTitle[it->second.getTitle()] = it->second;
+            bookIssuedByUser.erase(bookId);
+
+            bool has_book_user = false;
+            for(const auto& pair : bookIssuedByUser)// his is to chacke is user by userid has another book issued
+            {
+                if(pair.second == userId)
+                {
+                    has_book_user = true;
+                    break;
+                }
+            }
+
+            if(!has_book_user)
+            {
+                string name = userbyId[userId].getName();//this is for erasing from bookByTitle
+                bookbyId.erase(userId);
+                bookbyTitle.erase(name);
+
+            }
+
             cout << "Book returned successfully.\n";
         } else {
             cout << "Book was not issued.\n";
@@ -177,16 +214,16 @@ void Library::loadBooksFromFile(const string &filename) {
     while (getline(ln, line)) {
         string sid, title, author, issueds;
         stringstream str(line);
-
+        //take input from file and then store in strings
         getline(str, sid, ',');
         getline(str, title, ',');
         getline(str, author, ',');
         getline(str, issueds, ',');
 
-        int id = stoi(sid);
+        int id = stoi(sid);//conver string to int
         bool issued = (issueds == "1");
 
-        Book book(id, title, author, issued);
+        Book book(id, title, author, issued);//create new book object 
         addBook(book);
     }
     ln.close();
