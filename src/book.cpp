@@ -42,8 +42,8 @@ void Book::returnBook()
 void Book::display() const
 {
     cout << left
-         << setw(5) << id
-         << setw(40) << title
+         << setw(10) << id
+         << setw(35) << title
          << setw(30) << author
          << (issued ? "Yes" : "No") << endl;
 };

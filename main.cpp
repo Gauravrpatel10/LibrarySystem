@@ -1,12 +1,20 @@
 #include "include/library.h"
 #include <iostream>
 using namespace std;
+void handleBookIssue(Library &l);
+void handleBookReturn(Library &l);
+void handleSearchBookByTitle(Library &l);
+void handleShow_issued_book(Library &l);
+
+
 
 int main()
 {
     Library library;
     library.loadBooksFromFile("books.txt");
+    library.loadUsersFromFile("users.txt");
     library.loadAdminFromFile("admins.txt");
+    library.loadIssuedFromFile("issued.txt");
 
     // Add sample admins
     library.addAdmin(Admin("202301197", "Gaurav", "gaurav@10"));
@@ -41,7 +49,7 @@ int main()
             if (library.authenticateAdmin(id, pass))
             {
                 string AName = library.searchAdminNameById(id);
-                cout << "Admin login successful. Welcome, " <<AName<< "\n";
+                cout << "Admin login successful. Welcome, " << AName << "\n";
 
                 int adminChoice;
                 while (true)
@@ -56,11 +64,12 @@ int main()
                     cout << "7. Search User by ID\n";
                     cout << "8. Display All Books\n";
                     cout << "9. Display All Users\n";
-                    cout << "10. Logout\n";
+                    cout << "10. Show Issued Books whith user\n";
+                    cout << "11. Logout\n";
                     cout << "Enter your choice: ";
                     cin >> adminChoice;
 
-                    if (adminChoice == 10)//10. Logout
+                    if (adminChoice == 11) // 10. Logout
                     {
                         cout << "Logging out from admin account sucssefully.\n";
                         break;
@@ -68,7 +77,7 @@ int main()
 
                     switch (adminChoice)
                     {
-                    case 1://1. Add Book
+                    case 1: // 1. Add Book
                     {
                         int id;
                         string title, author;
@@ -80,7 +89,7 @@ int main()
                         library.addBook(Book(id, title, author));
                         break;
                     }
-                    case 2://2. Add User
+                    case 2: // 2. Add User
                     {
                         int id;
                         string name;
@@ -91,37 +100,16 @@ int main()
                         library.addUser(User(id, name));
                         break;
                     }
-                    case 3://3. Add admin
-                    {
-                        string id;
-                        string name;
-                        string password;
-                        cout << "Enter admin ID Name and password:\n";
-                        cin >> id;
-                        cin.ignore();
-                        getline(cin, name);
-                        getline(cin, password);
-                        library.addAdmin(Admin(id, name,password));
-                        cout<<"admin added sucssesfully.\n";
+                    case 3: // 3. To issue book
+                        handleBookIssue(library);
                         break;
-                    }
-                    case 4://4. Issue Book
-                    {
-                        int id;
-                        cout << "Enter Book ID to issue: ";
-                        cin >> id;
-                        library.issueBook(id);
+                    case 4: // 4. To return book
+                        handleBookReturn(library);
                         break;
-                    }
-                    case 5://5. Return Book
-                    {
-                        int id;
-                        cout << "Enter Book ID to return: ";
-                        cin >> id;
-                        library.returnBook(id);
+                    case 5: // 5. Search book by title
+                        handleSearchBookByTitle(library);
                         break;
-                    }
-                    case 6://6. Search Book by Title
+                    case 6: // 6. Search Book by Title
                     {
                         string title;
                         cout << "Enter Book Title to search: ";
@@ -130,7 +118,7 @@ int main()
                         library.searchBookByTitle(title);
                         break;
                     }
-                    case 7://7. Search User by ID
+                    case 7: // 7. Search User by ID
                     {
                         int id;
                         cout << "Enter User ID to search: ";
@@ -142,12 +130,16 @@ int main()
                             cout << "User not found.\n";
                         break;
                     }
-                    case 8://8. Display All Books
+                    case 8: // 8. Display All Books
                         library.displayAllBooks();
                         break;
-                    case 9://9. Display All Users
+                    case 9: // 9. Display All Users
                         library.displayAllUser();
                         break;
+                    case 10: // 9. Display All issued book by whom they are issued to
+                        library.displayIssuedBooksWithUser();
+                        break;
+
                     default:
                         cout << "Invalid choice. Try again.\n";
                     }
@@ -183,30 +175,16 @@ int main()
                 switch (userChoice)
                 {
                 case 1:
-                {
-                    string title;
-                    cout << "Enter Book Title to search: ";
-                    cin.ignore();
-                    getline(cin, title);
-                    library.searchBookByTitle(title);
+                    handleSearchBookByTitle(library);
                     break;
-                }
+
                 case 2:
-                {
-                    int id;
-                    cout << "Enter Book ID to issue: ";
-                    cin >> id;
-                    library.issueBook(id);
+                    handleBookIssue(library);
                     break;
-                }
+
                 case 3:
-                {
-                    int id;
-                    cout << "Enter Book ID to return: ";
-                    cin >> id;
-                    library.returnBook(id);
+                    handleBookReturn(library);
                     break;
-                }
                 case 4:
                     library.displayAllBooks();
                     break;
@@ -221,7 +199,33 @@ int main()
             cout << "Invalid choice. Try again.\n";
         }
     }
+    library.saveUsersToFile("users.txt");
     library.saveAdminsToFile("admins.txt");
     library.saveBooksToFile("books.txt");
+    library.saveIssuedToFile("issued.txt");
     return 0;
-}
+} // end main
+//=======================================================================================================================================
+// Deaclaration of handler function
+void handleBookIssue(Library &l)
+{
+    int id;
+    cout << "Enter Book ID to issue: ";
+    cin >> id;
+    l.issueBook(id);
+};
+void handleBookReturn(Library &l)
+{
+    int id;
+    cout << "Enter Book ID to return: ";
+    cin >> id;
+    l.returnBook(id);
+};
+void handleSearchBookByTitle(Library &l)
+{
+    string title;
+    cout << "Enter Book Title to search: ";
+    cin.ignore();
+    getline(cin, title);
+    l.searchBookByTitle(title);
+};
