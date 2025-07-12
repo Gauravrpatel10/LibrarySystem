@@ -1,0 +1,20 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build and Run LibrarySystem",
+      "type": "shell",
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "g++ -Iinclude -Idata_structures src/*.cpp main.cpp -o LibrarySystem.exe && LibrarySystem.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "detail": "Builds and runs Library Management System using CMD"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+for compile 
+"
+                g++ -Iinclude -Idata_structures src/*.cpp main.cpp -o LibrarySystem.exe
+
+
+"
+
+
+To run code 
+"
+                ./LibrarySystem.exe
+" 
+
+
+"
+g++ -Iinclude -Idata_structures src/*.cpp main.cpp -o LibrarySystem.exe
+./LibrarySystem.exe
